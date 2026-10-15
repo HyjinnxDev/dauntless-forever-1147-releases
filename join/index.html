@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Join a Dauntless Forever server</title>
+<style>
+  :root { color-scheme: dark; --ink: #04090d; --navy: #071a29; --ice: #18a7e0; --glow: #78ecf9; --frost: #f3f4f5; --steel: #999fa7; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: radial-gradient(circle at 50% 0%, #0b2f4a, var(--ink) 70%); color: var(--frost); font: 16px/1.5 system-ui, "Segoe UI", sans-serif; }
+  main { width: 100%; max-width: 460px; padding: 28px; background: color-mix(in srgb, var(--navy) 85%, transparent); border: 1px solid color-mix(in srgb, var(--glow) 18%, transparent); border-radius: 14px; text-align: center; }
+  h1 { margin: 0 0 6px; font-size: 22px; }
+  p { margin: 0 0 18px; color: var(--steel); }
+  .name { color: var(--glow); }
+  a.btn { display: block; margin-top: 10px; padding: 12px 16px; border-radius: 8px; font-weight: 700; text-decoration: none; color: var(--ink); background: linear-gradient(160deg, var(--glow), var(--ice)); }
+  a.btn.alt { color: var(--frost); background: transparent; border: 1px solid color-mix(in srgb, var(--glow) 30%, transparent); }
+  a.btn:focus-visible { outline: 2px solid var(--glow); outline-offset: 3px; }
+  .small { margin: 18px 0 0; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Opening the launcher…</h1>
+  <p id="text">Your browser may ask to open Dauntless Forever. Say yes.</p>
+  <a class="btn" id="open" href="#">Open in the launcher</a>
+  <a class="btn alt" href="https://github.com/HyjinnxDev/dauntless-forever-1147-releases/releases/latest/download/DauntlessForever1147Launcher-Setup.exe">Don't have it? Download the launcher</a>
+  <p class="small">After installing, click the invite link again.</p>
+</main>
+<script>
+  // The invite rides in the #fragment, which browsers never send to a server: this page never sees it
+  // leave the PC. The launcher checks the invite again before anything is joined.
+  (function () {
+    var q = location.hash.slice(1);
+    var ok = /^v=1&[A-Za-z0-9%._~=&+-]{10,2000}$/.test(q);
+    var title = document.getElementById("title"), text = document.getElementById("text"), open = document.getElementById("open");
+    if (!ok) {
+      title.textContent = "This invite link is incomplete";
+      text.textContent = "Ask your host for the link again, or paste their invite into the launcher's Servers tab.";
+      open.remove();
+      return;
+    }
+    var name = (q.match(/(?:^|&)name=([^&]*)/) || [])[1];
+    try { name = name && decodeURIComponent(name.replace(/\+/g, " ")); } catch (e) { name = null; }
+    if (name) {
+      title.textContent = "Join ";
+      var span = document.createElement("span");
+      span.className = "name";
+      span.textContent = name.slice(0, 64);
+      title.appendChild(span);
+    }
+    var target = "dauntless-forever-1147://join?" + q;
+    open.href = target;
+    location.href = target;
+  })();
+</script>
+</body>
+</html>
